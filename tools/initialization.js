@@ -1,6 +1,6 @@
 const User = require("../models/user");
 
-const intialization = async () => {
+const intialization = async function()  {
     try {
         const EXIST_ADMIN = await User.findOne({role: 'admin'});
         if (EXIST_ADMIN) {
