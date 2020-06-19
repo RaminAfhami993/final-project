@@ -78,7 +78,7 @@ router.post("/signup", async function (req, res) {
             mobile: req.body.mobile
         });
 
-        await newBlogger.save()
+        await newBlogger.save();
 
         res.render('./signup.ejs', {
             message: 'Signup was successfully.',
