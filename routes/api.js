@@ -58,7 +58,7 @@ router.post("/signup", async function (req, res) {
         };
 
         if (req.body.password.length < 8 || req.body.password.length > 30) {
-            throw new Error(`pass len`)
+            throw new Error(`pass len`);
         }
 
         const blogger = await User.findOne({
