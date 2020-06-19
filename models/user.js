@@ -28,6 +28,7 @@ const UserShema = new Schema({
     password: {
         type: String,
         required: true,
+        trim: true,
         maxlength: 30,
         minlength: 8
     },
@@ -44,7 +45,8 @@ const UserShema = new Schema({
     },
     role: {
         type: String,
-        enum: ['blogger', 'admin']
+        enum: ['blogger', 'admin'],
+        default: 'blogger'
     },
     createdAt: {
         type: Date,
