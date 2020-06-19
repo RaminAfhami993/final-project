@@ -4,7 +4,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-require('./tools/initialization')(); 
+const session = require('express-session');
+
+require('./tools/initialization')();
+
 
 // handle mongoose collection.ensureIndex warn
 mongoose.set('useNewUrlParser', true);
@@ -20,6 +23,27 @@ const apiRouter = require('./routes/api');
 
 const app = express();
 
+
+
+// req.session
+
+// session 
+
+// res.user_sid
+
+app.use(session({
+    key: 'user_sid',
+    secret: 'somerandonstuffs',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}));
+
+
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -32,7 +56,22 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//cookie
+app.use(function(req, res, next) {
+	console.log('Cookies:', req.cookies);
+	res.cookie('name', 'Reza');
+	console.log(req.session);
+	
+	// res.clearCookie('name')
+	next();
+});
+
 app.use('/api', apiRouter);
+
+app.use('/', apiRouter);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
