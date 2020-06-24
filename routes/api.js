@@ -18,7 +18,7 @@ router.get("/signup", function (req, res) {
 
 router.post("/signin", async function (req, res) {
     try {
-        if (!req.body.username || !req.body.password) {
+        if (!req.body.userName || !req.body.password) {
             throw new Error('You have an empty input.')
         };
 
@@ -39,6 +39,13 @@ router.post("/signin", async function (req, res) {
         //     throw new Error(`The password is incorrect.`)
         // }
 
+        req.session.user = blogger;
+
+        // (
+        //     res.cookie("user_sid", "asdfasdfasdfasdf");
+        //     session ---> save
+        // )
+
         res.render('./signin.ejs', {
             message: `Signin was successfully, welcome ${req.body.userName}.`,
             color: 'success'
@@ -53,7 +60,7 @@ router.post("/signin", async function (req, res) {
 
 router.post("/signup", async function (req, res) {
     try {
-        if (!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName || !req.body.sex || !req.body.mobile) {
+        if (!req.body.userName || !req.body.password || !req.body.firstName || !req.body.lastName || !req.body.sex || !req.body.mobile) {
             throw new Error('You have an empty input.')
         };
 
@@ -91,5 +98,13 @@ router.post("/signup", async function (req, res) {
         })
     }
 });
+
+
+
+router.get('/addArticle', (req, res) => {
+    res.json(true);
+});
+
+
 
 module.exports = router;
