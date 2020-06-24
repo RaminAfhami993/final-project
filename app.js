@@ -22,6 +22,15 @@ app.use(session({
 
 app.use(cookieParser());
 
+app.use(function(req, res, next) {
+	if (req.cookies.user_sid && !req.session.user) {
+		res.clearCookie("user_sid");
+	};
+
+	next();
+});
+
+
 
 
 require('./tools/initialization')(); 
@@ -56,6 +65,8 @@ app.use((req, res, next) => {
 	console.log(req.session);
 	next();
 });
+
+
 
 
 app.use('/api', apiRouter);
