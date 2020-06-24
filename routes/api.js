@@ -1,22 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const userRouter = require('./user')
 
-router.get("/signin", function (req, res) {
+
+const checkSession = function(req, res, next) {
+    if (!req.session.user) return res.redirect('/api/signin')
+
+    next();
+};
+
+
+router.use('/user', checkSession, userRouter);
+router.use('/article', checkSession, userRouter);
+router.use('/comment', checkSession, userRouter);
+
+
+
+
+
+const isLogin = function(req, res, next) {
+    if (req.session.user) return res.redirect('/api/dashboard')
+
+    next();
+};
+
+router.get("/signin",isLogin, function (req, res) {
     res.render('./signin.ejs', {
         message: 'Please insert your information to signin.',
         color: 'primary'
     })
 });
 
-router.get("/signup", function (req, res) {
+router.get("/signup",isLogin, function (req, res) {
     res.render('./signup.ejs', {
         message: 'Please insert your information to signup.',
         color: 'primary'
     })
 });
 
-router.post("/signin", async function (req, res) {
+router.post("/signin",isLogin, async function (req, res) {
     try {
         if (!req.body.userName || !req.body.password) {
             throw new Error('You have an empty input.')
@@ -46,10 +69,7 @@ router.post("/signin", async function (req, res) {
         //     session ---> save
         // )
 
-        res.render('./signin.ejs', {
-            message: `Signin was successfully, welcome ${req.body.userName}.`,
-            color: 'success'
-        })
+        res.redirect('/api/user/dashboard')
     } catch (error) {
         res.render('./signin.ejs', {
             message: error.message,
@@ -58,7 +78,7 @@ router.post("/signin", async function (req, res) {
     }
 });
 
-router.post("/signup", async function (req, res) {
+router.post("/signup",isLogin, async function (req, res) {
     try {
         if (!req.body.userName || !req.body.password || !req.body.firstName || !req.body.lastName || !req.body.sex || !req.body.mobile) {
             throw new Error('You have an empty input.')
@@ -101,9 +121,13 @@ router.post("/signup", async function (req, res) {
 
 
 
-router.get('/addArticle', (req, res) => {
-    res.json(true);
-});
+
+
+
+
+
+
+
 
 
 
