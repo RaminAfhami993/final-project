@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const userRouter = require('./user')
 
 
+const checkSession = function(req, res, next) {
+    if (!req.session.user) return res.redirect('/api/signin')
+
+    next();
+};
 
 
-
-
+router.use('/user', checkSession, userRouter);
+router.use('/article', checkSession, userRouter);
+router.use('/comment', checkSession, userRouter);
 
 
 
@@ -62,7 +69,7 @@ router.post("/signin",isLogin, async function (req, res) {
         //     session ---> save
         // )
 
-        res.render('./dashboard.ejs', {user: req.session.user})
+        res.redirect('/api/user/dashboard')
     } catch (error) {
         res.render('./signin.ejs', {
             message: error.message,
@@ -110,19 +117,6 @@ router.post("/signup",isLogin, async function (req, res) {
             color: 'danger'
         })
     }
-});
-
-const checkSession = function(req, res, next) {
-    if (!req.session.user) return res.redirect('/api/signin')
-
-    next();
-};
-
-
-
-
-router.get('/dashboard', checkSession, (req, res) => {
-    res.render('./dashboard.ejs', {user: req.session.user})
 });
 
 
