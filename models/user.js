@@ -52,7 +52,21 @@ const UserShema = new Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    avatar: {
+        type: String
     }
 });
+
+// UserShema.pre('findOneAndUpdate', function(next) {
+    // if (this._update.avatar) {
+    //     User.findById({_id: this._update._id}, (err, user) => {
+    //         if (err) next(err);
+
+    //         fs.remove(`public/${user.avatar}`);
+    //         next()
+    //     })
+    // }
+// });
 
 module.exports = mongoose.model('User', UserShema);
